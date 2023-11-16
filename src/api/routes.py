@@ -21,12 +21,26 @@ def handle_hello():
 
 @api.route('/token', methods=['POST'])
 def create_token():
-    email=request.json.get("email", None)
-    password=request.json.get("password", None)
-    if email != "test" or password != "test":
-        return jsonify({"msg":"Bad username or password"}), 401
-    access_token=create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    body = request.json
+    email = body["email"]
+    password = body["password"]
+
+    valid_credentials = User.verify_credentials(email=email, password=password)
+    if not isinstance(valid_credentials, User):
+        return jsonify({
+            "message": valid_credentials["message"],
+            "success": False
+        }), valid_credentials["status"]
+
+    access_token = create_access_token(identity=valid_credentials.id)
+    print(access_token)
+
+    return jsonify({
+        "message": "Success verification",
+        "success": True,
+        "token": access_token
+    }), 200
+
 
 @api.route('/private', methods=['GET'])
 @jwt_required()
@@ -35,3 +49,19 @@ def handle_private():
         "message": "Hello! I'm private"
     }
     return jsonify(response_body), 200
+
+@api.route('/user', methods=['POST'])
+def handle_user():
+    body = request.json
+    new_user=User.create(body)
+    if not isinstance(new_user, User):
+        return jsonify({
+            "message": new_user["message"],
+            "success": False
+        }), new_user["status"]
+    user = User.query.filter_by(email=new_user.email).one_or_none()
+    return jsonify({
+        "success": True,
+        "message": "User was created successfully",
+        "data": user.serialize()
+    }), 201

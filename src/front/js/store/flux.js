@@ -39,8 +39,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return false;
 			}
 			const data = await resp.json();
-			sessionStorage.setItem("token", data.access_token);
-			setStore({token: data.access_token})
+			sessionStorage.setItem("token", data.token);
+			setStore({token: data.token})
 			console.log('Response:', data);
 			return true;
 			}
