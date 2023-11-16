@@ -80,16 +80,12 @@ class User(db.Model):
             return error.args[0]
 
     def save_and_commit(self):
-        """
-            Salva la instancia creada, en la base de datos. Si sucede algún error, 
-            se retorna False y se revierten los cambios de la sesión
-        """
         try:
-            db.session.add(self)  #Guardamos la instancia en la sessión
-            db.session.commit() #Creamos el registro en la db 
+            db.session.add(self)  
+            db.session.commit() 
             return True
         except error:
-            db.session.rollback() #Retornamos a la session mas reciente
+            db.session.rollback()
             return False
 
     def serialize(self):
@@ -98,5 +94,4 @@ class User(db.Model):
             "email": self.email,
             "created_at": self.created_at,
             "updated_at": self.updated_at
-            # do not serialize the password, its a security breach
         }

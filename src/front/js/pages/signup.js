@@ -22,8 +22,7 @@ export const Signup = () => {
     })
       .then(async (res) => {
         if (!res.ok) {
-          const { message } = await res.json();
-          console.log("Error:", message); // Log the error message to the console
+          alert("USER ALREADY IN DATABASE");
         }
         return res.json();
       })
@@ -37,16 +36,15 @@ export const Signup = () => {
   return status ? (
     <Navigate to="/login" />
   ) : (
-    <div className="container">
-      <form onSubmit={handleSubmit(onSubmit)} className="signup-form">
-        <div className="mb-3 row">
-          <h2>Register</h2>
-          <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
-            Email:
+<div className="container">
+  <div className="row justify-content-center mt-5">
+    <div className="col-md-6">
+      <h2 className="text-center mb-4">Register</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="form-group">   
+          <label>
+            Email
           </label>
-          <div className="col-sm-10">
-            <div className="input-group mb-3">
-              <span className="input-group-text" id="basic-addon1"></span>
               <input
                 type="email"
                 name="email"
@@ -54,17 +52,12 @@ export const Signup = () => {
                 placeholder="Username"
                 {...register("email", { required: "El correo es requerido" })}
               />
-            </div>
-            {errors?.email && <p className="error-message">{errors.email.message}</p>}
-          </div>
+            {errors?.email && <p className="error-message">{errors.email.message}</p>}  
         </div>
-        <div className="mb-3 row">
-          <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-            Password:
+        <div className="form-group">
+          <label>
+            Password
           </label>
-          <div className="col-sm-10">
-            <div className="input-group mb-3">
-              <span className="input-group-text" id="basic-addon1"></span>
               <input
                 type="password"
                 name="password"
@@ -74,20 +67,20 @@ export const Signup = () => {
                   required: "Este campo es requerido",
                 })}
               />
-            </div>
             {errors?.password && <p className="error-message">{errors.password.message}</p>}
-          </div>
         </div>
         <div className="mb-3 d-flex justify-content-evenly">
-          <button type="submit" className="btn btn-primary">
-            Let's do it
-          </button>
           <Link to="/login">
-						<button className="btn btn-primary">I already have an account</button>
+						<button className="btn btn-primary mt-2">I already have an account</button>
 					</Link>
+          <button type="submit" className="btn btn-primary mt-2">
+            Sign Up
+          </button>
         </div>
       </form>
     </div>
+  </div>
+</div> 
   );
 };
 
